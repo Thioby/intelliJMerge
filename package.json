@@ -1,0 +1,82 @@
+{
+  "name": "intellij-merge-tool",
+  "displayName": "IntelliJ Merge Tool",
+  "description": "Resolve git merge conflicts using JetBrains IDE merge tool",
+  "version": "0.1.0",
+  "publisher": "anowak",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "workspaceContains:.git",
+    "onCommand:intellijMerge.resolveConflicts",
+    "onCommand:intellijMerge.mergeCurrentFile"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "intellijMerge.resolveConflicts",
+        "title": "Resolve Git Conflicts",
+        "category": "IntelliJ Merge"
+      },
+      {
+        "command": "intellijMerge.mergeCurrentFile",
+        "title": "Merge Current File",
+        "category": "IntelliJ Merge"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "intellijMerge.resolveConflicts",
+          "when": "intellijMerge.mergeInProgress",
+          "group": "navigation@100"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "intellijMerge.resolveConflicts",
+          "when": "intellijMerge.mergeInProgress"
+        },
+        {
+          "command": "intellijMerge.mergeCurrentFile",
+          "when": "intellijMerge.mergeInProgress"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "IntelliJ Merge Tool",
+      "properties": {
+        "intellijMerge.mergetoolPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the merge tool binary (auto-detected if empty)"
+        },
+        "intellijMerge.autoRefreshInterval": {
+          "type": "number",
+          "default": 2000,
+          "description": "Polling interval in milliseconds for conflict list refresh"
+        },
+        "intellijMerge.showNotificationOnAllResolved": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notification when all conflicts are resolved"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node --import tsx --test src/test/**/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0",
+    "tsx": "^4.0.0"
+  }
+}
